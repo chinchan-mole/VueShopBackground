@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/login.vue'
 import Home from '../components/home.vue'
+import Welcome from '../components/welcome.vue'
+import UserList from '../components/user/userList.vue'
+
 Vue.use(VueRouter)
 
 const routes = [{
@@ -12,9 +15,29 @@ const routes = [{
     path: '/',
     redirect: '/login'
   },
+  //将后台结构/home作为父级路由，模板的内容主体区域放置一个路由占位符，不同导航作为子路由，父路由的主体内容区呈现不同的子路由组件即可
   {
     path: '/home',
-    component: Home
+    component: Home,
+    //home重定向到一个子路由可以使跳转到父级路由时父级中路由占位符自动加载子路由组件
+    redirect: '/welcome',
+    children: [{
+        path: '/welcome',
+        component: Welcome
+      },
+      {
+        path: '/users',
+        component: UserList
+      },
+      {
+        path: '/roles',
+        component: UserList
+      },
+      {
+        path: '/rights',
+        component: UserList
+      },
+    ]
   }
 ]
 

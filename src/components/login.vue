@@ -22,37 +22,39 @@
 
 <script>
 export default {
-    data: () => ({
-        form: {
-            username: "",
-            password: "",
-        },
-        rules: {
-            username: [{
-                    required: true,
-                    message: "请输入用户名！",
-                    trigger: "blur"
-                },
-                {
-                    min: 5,
-                    max: 12,
-                    message: "用户名长度在5-12位之间",
-                    trigger: "blur"
-                },
-            ],
-            password: [{
-                    required: true,
-                    message: "请输入密码！",
-                    trigger: "blur"
-                },
-                {
-                    min: 6,
-                    message: "密码长度至少为6位",
-                    trigger: "blur"
-                },
-            ],
-        },
-    }),
+    data() {
+        return {
+            form: {
+                username: "admin",
+                password: "123456",
+            },
+            rules: {
+                username: [{
+                        required: true,
+                        message: "请输入用户名！",
+                        trigger: "blur"
+                    },
+                    {
+                        min: 5,
+                        max: 12,
+                        message: "用户名长度在5-12位之间",
+                        trigger: "blur"
+                    },
+                ],
+                password: [{
+                        required: true,
+                        message: "请输入密码！",
+                        trigger: "blur"
+                    },
+                    {
+                        min: 6,
+                        message: "密码长度至少为6位",
+                        trigger: "blur"
+                    },
+                ],
+            },
+        }
+    },
     methods: {
         reset: function () {
             this.form.username = "";
@@ -69,15 +71,15 @@ export default {
             if (this.check()) {
                 let {
                     data: res
-                } = await this.$axios.post("login", this.form);
+                } = await this.$axios.post("/login", this.form);
                 if (res.meta.status != 200) return this.$message.error("登录失败");
-                console.log(res);
                 window.sessionStorage.setItem("token", res.data.token); //保存token至会话存储
                 this.$message({
-                    message: "恭喜你，登录成功",
+                    message: "登录成功",
                     type: "success",
                 });
-                this.$router.push("/home"); //登录后发生路由跳转
+                window.sessionStorage.setItem('username',this.form.username);//用户名放置在会话存储中
+                this.$router.push('/home'); //登录后发生路由跳转
             }
         },
     },

@@ -4,11 +4,66 @@ import {
   Form,
   FormItem,
   Input,
-  Message
+  Message,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Menu,
+  MenuItem,
+  Submenu,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Row,
+  Col,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip,
+  Pagination,
+  Dialog,
+  Popconfirm,
+  Calendar
 } from 'element-ui'
 
-Vue.use(Button) //按钮组件
-Vue.use(Form) //表单组件
-Vue.use(FormItem) //表单组件
-Vue.use(Input) //表单输入组件
-Vue.prototype.$message = Message //挂载弹窗提示组件
+ //注册按钮组件
+Vue.use(Button)
+//表单组件
+Vue.use(Form) 
+Vue.use(FormItem) 
+Vue.use(Input)
+//布局组件
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Aside)
+Vue.use(Main)
+//挂载弹窗提示组件
+Vue.prototype.$message = Message 
+//侧边栏
+Vue.use(Menu)
+Vue.use(MenuItem)
+Vue.use(Submenu)
+//面包屑导航
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+//卡片面板
+Vue.use(Card)
+//layer布局ue.use(Table)
+Vue.use(Row)
+Vue.use(Col)
+//表格
+Vue.use(Table)
+Vue.use(TableColumn)
+//开关
+Vue.use(Switch)
+//文字提示
+Vue.use(Tooltip)
+//分页
+Vue.use(Pagination)
+//对话框
+Vue.use(Dialog)
+//气泡确认
+Vue.use(Popconfirm)
+//日历
+Vue.use(Calendar)

@@ -1,5 +1,27 @@
-html,body,#app {
+html,
+body,
+#app {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+/* 给home里的所有组件面包屑和卡片之间一个距离 */
+.el-breadcrumb {
+    margin-bottom: 16px;
+}
+
+/* 所有组件的卡片于面包屑带一个距离 */
+.el-card {
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 所有表格头部设置距离 */
+.el-table {
+    margin-top: 20px;
+}
+
+/* 全局设置分页的头部距离 */
+.el-pagination {
+    margin-top: 20px
 }
