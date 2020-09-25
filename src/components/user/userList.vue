@@ -48,7 +48,7 @@
                         <el-button type="danger" icon="el-icon-delete" circle @click.native="showDelConfirm(handle.row)"></el-button>
                     </el-tooltip>
                     <el-tooltip effect="dark" content="分配角色" placement="top-start" :enterable="false">
-                        <el-button type="warning" icon="el-icon-star-off" circle></el-button>
+                        <el-button type="warning" icon="el-icon-star-off" circle @click="showRoleForm(handle.row)"></el-button>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -103,6 +103,22 @@
             <el-button type="primary" @click="delUser">确 定</el-button>
         </span>
     </el-dialog>
+    <!-- 分配角色表单 -->
+    <el-dialog title="分配角色" :visible.sync="roleDialogVisible" width="20%" @close="setRoleId = ''">
+        <p>用户名：{{setRoleUserForm.username}}</p>
+        <p>id：{{setRoleUserForm.id}}</p>
+        <p>角色：{{setRoleUserForm.role}}</p>
+        <p>角色变更为：
+            <el-select v-model="setRoleId" placeholder="请选择">
+                <el-option v-for="item in rolesMenu" :key="item.id" :label="item.roleName" :value="item.id">
+                </el-option>
+            </el-select>
+        </p>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="roleDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="setRole">确 定</el-button>
+        </span>
+    </el-dialog>
 </div>
 </template>
 
@@ -132,6 +148,9 @@ export default {
             dialogVisible: false,
             editDialogVisible: false,
             delDialogVisible: false,
+            roleDialogVisible: false,
+            rolesMenu: [],
+            setRoleId: '',
             addUserForm: {
                 username: '',
                 password: '',
@@ -146,6 +165,11 @@ export default {
             },
             delUserName: '',
             delUserId: 0,
+            setRoleUserForm: {
+                username: '',
+                id: 0,
+                role: '',
+            },
             rules: {
                 username: [{
                         required: true,
@@ -183,7 +207,7 @@ export default {
             },
         }
     },
-    created: function () {
+    created: async function () {
         this.getUserList();
     },
     methods: {
@@ -291,6 +315,34 @@ export default {
                 type: "success",
             });
             this.getUserList();
+        },
+        //显示用户角色分配表单并获取用户的角色ID
+        async showRoleForm(row) {
+            this.setRoleUserForm.id = row.id;
+            this.setRoleUserForm.username = row.username;
+            this.setRoleUserForm.role = row.role_name;
+            let {
+                data: res
+            } = await this.$axios.get('/roles');
+            if (res.meta.status !== 200) return;
+            this.rolesMenu = res.data;
+            this.roleDialogVisible = true;
+        },
+        //分配角色请求
+        async setRole() {
+            if(!this.setRoleId) return this.$message.error('请选择要分配的身份！');
+            let {
+                data: res
+            } = await this.$axios.put(`/users/${this.setRoleUserForm.id}/role`, {
+                rid: this.setRoleId
+            });
+            if (res.meta.status !== 200) return;
+            this.$message({
+                message: res.meta.msg,
+                type: "success",
+            });
+            this.getUserList();
+            this.roleDialogVisible = false;
         }
     }
 };

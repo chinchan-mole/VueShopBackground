@@ -7,7 +7,7 @@
             <span>后台管理系统</span>
         </div>
         <div class="right">
-            <span class="clock">当前时间：{{dateForm.hour}}:{{dateForm.minute}}:{{dateForm.second}}</span>
+            <span class="clock">当前时间： {{dateForm.hour}}:{{dateForm.minute}}:{{dateForm.second}}</span>
             <span class="adminName">当前管理员：{{administrator}}</span>
             <el-button type="info" @click.native="logout">退出</el-button>
         </div>
@@ -126,7 +126,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .home_container {
     height: 100%;
 
@@ -193,7 +193,6 @@ export default {
 .el-main {
     background-color: #E9EEF3;
     color: #333;
-    text-align: center;
 }
 
 body>.el-container {

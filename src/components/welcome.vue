@@ -1,7 +1,7 @@
 <template>
 <el-container>
     <el-header>
-        <span>{{administrator}} {{time}}</span>
+        <span class="welcome">{{administrator}} {{time}}</span>
         <el-card shadow="always">
             <span class="weather">{{weather.city}}当前天气：{{weather.weather}} | 当前温度：{{weather.temperature}}°C | 湿度：{{weather.humidity}}% | 更新时间：{{weather.reporttime}}</span>
         </el-card>
@@ -58,10 +58,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// 弹性布局且两端对齐、垂直居中
 .el-header {
+    display: flex;
+    justify-content: space-between;
     background-color: rgba(255, 255, 255, 0);
-    .weather {
-        font-size: 14px;
+    align-items: center;
+    .el-card {
+        .weather {
+            font-size: 14px;
+        }
     }
 }
 </style>

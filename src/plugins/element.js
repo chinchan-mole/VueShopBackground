@@ -24,7 +24,12 @@ import {
   Pagination,
   Dialog,
   Popconfirm,
-  Calendar
+  Calendar,
+  Tag,
+  MessageBox,
+Tree,
+Select,
+Option
 } from 'element-ui'
 
  //注册按钮组件
@@ -40,6 +45,7 @@ Vue.use(Aside)
 Vue.use(Main)
 //挂载弹窗提示组件
 Vue.prototype.$message = Message 
+Vue.prototype.$messagebox = MessageBox
 //侧边栏
 Vue.use(Menu)
 Vue.use(MenuItem)
@@ -67,3 +73,10 @@ Vue.use(Dialog)
 Vue.use(Popconfirm)
 //日历
 Vue.use(Calendar)
+//标签
+Vue.use(Tag)
+//树形结构
+Vue.use(Tree)
+//下拉选择菜单
+Vue.use(Select)
+Vue.use(Option)
