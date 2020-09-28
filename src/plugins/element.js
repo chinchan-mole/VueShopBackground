@@ -27,16 +27,17 @@ import {
   Calendar,
   Tag,
   MessageBox,
-Tree,
-Select,
-Option
+  Tree,
+  Select,
+  Option,
+  Cascader
 } from 'element-ui'
 
- //注册按钮组件
+//注册按钮组件
 Vue.use(Button)
 //表单组件
-Vue.use(Form) 
-Vue.use(FormItem) 
+Vue.use(Form)
+Vue.use(FormItem)
 Vue.use(Input)
 //布局组件
 Vue.use(Container)
@@ -44,7 +45,7 @@ Vue.use(Header)
 Vue.use(Aside)
 Vue.use(Main)
 //挂载弹窗提示组件
-Vue.prototype.$message = Message 
+Vue.prototype.$message = Message
 Vue.prototype.$messagebox = MessageBox
 //侧边栏
 Vue.use(Menu)
@@ -80,3 +81,5 @@ Vue.use(Tree)
 //下拉选择菜单
 Vue.use(Select)
 Vue.use(Option)
+//级联选择
+Vue.use(Cascader)

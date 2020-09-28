@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
+import Zktable from 'vue-table-with-tree-grid'
 import './plugins/element.js'
 import './assets/css/global.css'
 import './assets/css/removeEleRequire.css'
@@ -17,6 +18,7 @@ config.headers.Authorization = token;
 return config;
 })
 Vue.prototype.$axios = axios
+Vue.use(Zktable)
 
 new Vue({
   router,
