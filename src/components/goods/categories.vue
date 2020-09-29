@@ -23,8 +23,8 @@
                 <el-tag type="warning" v-else>三级</el-tag>
             </template>
             <template slot="handle" slot-scope="scope">
-                <el-button type="primary" icon="el-icon-setting">编辑</el-button>
-                <el-button type="danger" icon="el-icon-delete">删除</el-button>
+                <el-button type="primary" icon="el-icon-setting" size="small" @click="showEditDialog(scope.row.cat_name,scope.row.cat_id)">编辑</el-button>
+                <el-button type="danger" icon="el-icon-delete" size="small" @click="delComfirm(scope.row.cat_name,scope.row.cat_id)">删除</el-button>
             </template>
         </zk-table>
         <!-- 分页区 -->
@@ -45,6 +45,18 @@
         <span slot="footer" class="dialog-footer">
             <el-button @click="addDialogVisible = false ;">取 消</el-button>
             <el-button type="primary" @click="addCate">确 定</el-button>
+        </span>
+    </el-dialog>
+    <!-- 编辑分类表单 -->
+    <el-dialog title="编辑分类" :visible.sync="editDialogVisible" width="30%">
+        <el-form ref="editFormRef" :model="editCatForm" label-width="150px">
+            <el-form-item label="分类名称（必填）：" prop="cat_name">
+                <el-input v-model="editCatForm.cat_name"></el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="editDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="editCat">确 定</el-button>
         </span>
     </el-dialog>
 </div>
@@ -105,7 +117,21 @@ export default {
                     message: '名称不得为空！',
                     tigger: 'blur'
                 }]
-            }
+            },
+            //编辑分类表单显示开关
+            editDialogVisible: false,
+            //编辑分类存储
+            editCatForm: {
+                cat_name: '',
+                cat_id: '',
+            },
+            editCatFormRules: {
+                cat_name: [{
+                    required: true,
+                    message: '名称不得为空！',
+                    tigger: 'blur'
+                }]
+            },
         }
     },
     created() {
@@ -174,7 +200,6 @@ export default {
                 this.addDialogVisible = false;
                 this.getCateList();
             })
-
         },
         //重置添加分类表单
         clearAddForm() {
@@ -182,9 +207,58 @@ export default {
             this.addCatForm.cat_name = '';
             this.addCatForm.cat_level = 0;
             this.addCatFathersId = [];
+        },
+        //删除确认
+        delComfirm(cat_name, cat_id) {
+            this.$messagebox.confirm('是否删除?', '删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                let {
+                    data: res
+                } = await this.$axios.delete(`/categories/${cat_id}`, {
+                    cat_name: cat_name
+                })
+                if (res.meta.status !== 200) return this.$message.error("删除失败!");
+                this.getCateList();
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        //显示编辑表单并填充数据
+        showEditDialog(cat_name, cat_id) {
+            this.editCatForm.cat_name = cat_name;
+            this.editCatForm.cat_id = cat_id;
+            this.editDialogVisible = true;
+        },
+        //编辑预验证与提交请求,编辑表单无需清空，毕竟点其他的编辑新数据会覆盖旧数据
+        editCat() {
+            this.$refs.editFormRef.validate(async valid => {
+                if (!valid) return;
+                let {
+                    data: res
+                } = await this.$axios.put(`/categories/${this.editCatForm.cat_id}`, {
+                    cat_name: this.editCatForm.cat_name
+                });
+                if (res.meta.status != 200) return this.$message.error('修改失败！');
+                this.editDialogVisible = false;
+                this.getCateList();
+                this.$message({
+                    type: 'success',
+                    message: res.meta.msg
+                });
+
+            })
         }
     },
-
 }
 </script>
 
