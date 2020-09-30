@@ -20,6 +20,11 @@
             <el-tab-pane label="动态参数" name="many" :disabled="isDisabled">
                 <el-button type="primary" size="mini" :disabled="isDisabled" @click="showAddDialog()">添加参数</el-button>
                 <el-table :data="manyList" style="width: 100%" border>
+                    <!-- element UI 表格的DOM刷新与表格:data属性绑定的主体数据源改变的时间一致，而不同于绑定的对象属性值改变，其中包括展开行，
+                    所有表格除了绑定数据源，不要绑定其他对象属性以免出现DOM延迟刷新异常
+                    在展开行的作用域插槽内有绑定对象属性且对象属性有更新，则内部DOM直到下拉行的expand-change事件发生才会重渲染DOM
+                    如果希望下拉行中的内容即时更新，则应该遍历:data绑定的数据源数组，在遍历过程将绑定属性赋值到数据源数组的每一个对象成员属性中，
+                    作用域插槽只需要提取scope即可-->
                     <el-table-column type="expand" label="">
                         <template slot-scope="scope">
                             <el-tag :key="index" v-for="(item,index) in scope.row.attr_vals" closable @close="delParam(scope.row,index)">
