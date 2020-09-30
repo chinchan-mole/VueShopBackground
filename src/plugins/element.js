@@ -30,7 +30,10 @@ import {
   Tree,
   Select,
   Option,
-  Cascader
+  Cascader,
+  Alert,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 //注册按钮组件
@@ -83,3 +86,8 @@ Vue.use(Select)
 Vue.use(Option)
 //级联选择
 Vue.use(Cascader)
+//警告提示
+Vue.use(Alert)
+//页签
+Vue.use(Tabs)
+Vue.use(TabPane)

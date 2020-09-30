@@ -7,7 +7,7 @@ module.exports = {
         'secure': false, // false为http访问，true为https访问
         'changeOrigin': true, // 跨域访问设置，true代表跨域
         'pathRewrite': { // 路径改写规则
-          '^/amap/': '' // 以/amap/为开头的改写为'',以便将target直接与后面的拼接
+          '^/amap/': '' // 以/amap/为开头的改写为'',以便将target直接与后面的拼接，若后面不为空，则....
         }
       }
     }
