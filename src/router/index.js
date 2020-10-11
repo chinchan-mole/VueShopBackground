@@ -8,6 +8,8 @@ import Rights from '../components/power/rights.vue'
 import Roles from '../components/power/roles.vue'
 import Cate from '../components/goods/categories.vue'
 import Params from '../components/goods/params.vue'
+import GoodsList from '../components/goods/list.vue'
+import Addgoods from '../components/goods/add.vue'
 
 Vue.use(VueRouter)
 
@@ -19,11 +21,9 @@ const routes = [{
     path: '/',
     redirect: '/login'
   },
-  //将后台结构/home作为父级路由，模板的内容主体区域放置一个路由占位符，不同导航作为子路由，父路由的主体内容区呈现不同的子路由组件即可
   {
     path: '/home',
     component: Home,
-    //home重定向到一个子路由可以使跳转到父级路由时父级中路由占位符自动加载子路由组件
     redirect: '/welcome',
     children: [{
         path: '/welcome',
@@ -49,6 +49,14 @@ const routes = [{
         path: '/params',
         component: Params
       },
+      {
+        path: '/goods',
+        component: GoodsList
+      },
+      {
+        path: '/goods/add',
+        component: Addgoods
+      }
     ]
   }
 ]

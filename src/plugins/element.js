@@ -33,7 +33,14 @@ import {
   Cascader,
   Alert,
   Tabs,
-  TabPane
+  TabPane,
+  Step,
+  Steps,
+  CheckboxGroup,
+  Checkbox,
+  Upload,
+  Image,
+  Notification
 } from 'element-ui'
 
 //注册按钮组件
@@ -91,3 +98,15 @@ Vue.use(Alert)
 //页签
 Vue.use(Tabs)
 Vue.use(TabPane)
+//步骤条
+Vue.use(Step)
+Vue.use(Steps)
+//多选框组
+Vue.use(CheckboxGroup)
+Vue.use(Checkbox)
+//上传组件
+Vue.use(Upload)
+//图片
+Vue.use(Image)
+//通知
+Vue.prototype.$notify = Notification
