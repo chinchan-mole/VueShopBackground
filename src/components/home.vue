@@ -45,24 +45,24 @@
 
 <script>
 export default {
-    data() {
+    data () {
         var checkEmail = () => {
 
-        };
+        }
         var checkM0bile = () => {
 
-        };
+        }
         return {
-            //当前的管理员
+            // 当前的管理员
             administrator: '',
             menus: [],
-            //通过访问状态对象属性的方法取得字体图标的class类名
+            // 通过访问状态对象属性的方法取得字体图标的class类名
             icons: {
-                '125': 'iconfont icon-user',
-                '103': 'iconfont icon-tijikongjian',
-                '101': 'iconfont icon-shangpin',
-                '102': 'iconfont icon-danju',
-                '145': 'iconfont icon-baobiao'
+                125: 'iconfont icon-user',
+                103: 'iconfont icon-tijikongjian',
+                101: 'iconfont icon-shangpin',
+                102: 'iconfont icon-danju',
+                145: 'iconfont icon-baobiao'
             },
             isCollapse: false,
             asideWidth: 200,
@@ -71,59 +71,59 @@ export default {
             dateForm: {
                 hour: '',
                 minute: '',
-                second: '',
+                second: ''
             }
         }
     },
     created: function () {
-        //读取当前登录的用户名
-        this.administrator = window.sessionStorage.getItem('username');
-        this.getMenu();
-        //读取默认激活菜单
-        this.defaultActive = window.sessionStorage.getItem('active');
-        window.setInterval(this.timer, 1000);
+        // 读取当前登录的用户名
+        this.administrator = window.sessionStorage.getItem('username')
+        this.getMenu()
+        // 读取默认激活菜单
+        this.defaultActive = window.sessionStorage.getItem('active')
+        window.setInterval(this.timer, 1000)
     },
     methods: {
-        //当前时间
-        timer() {
-            const currentTime = new Date();
-            this.dateForm.hour = this.dateFormat(currentTime.getHours());
-            this.dateForm.minute = this.dateFormat(currentTime.getMinutes());
-            this.dateForm.second = this.dateFormat(currentTime.getSeconds());
+        // 当前时间
+        timer () {
+            const currentTime = new Date()
+            this.dateForm.hour = this.dateFormat(currentTime.getHours())
+            this.dateForm.minute = this.dateFormat(currentTime.getMinutes())
+            this.dateForm.second = this.dateFormat(currentTime.getSeconds())
         },
         // 补零方法
-        dateFormat(num) {
-            return num < 10 ? '0' + num : '' + num;
+        dateFormat (num) {
+            return num < 10 ? '0' + num : '' + num
         },
-        //退出登录并返回登录界面，删除本站的token,使用clear会清除其他token
+        // 退出登录并返回登录界面，删除本站的token,使用clear会清除其他token
         logout: function () {
-            window.sessionStorage.removeItem("token");
+            window.sessionStorage.removeItem('token')
             this.$message({
-                message: "退出登录成功",
-                type: "warning",
-            });
-            this.$router.push("/login");
+                message: '退出登录成功',
+                type: 'warning'
+            })
+            this.$router.push('/login')
         },
-        //获取左侧菜单
+        // 获取左侧菜单
         getMenu: async function () {
-            let {
+            const {
                 data: res
-            } = await this.$axios.get('/menus');
-            if (res.meta.status != 200) return this.$message.error(res.meta.msg);
-            this.menus = res.data;
+            } = await this.$axios.get('/menus')
+            if (res.meta.status != 200) return this.$message.error(res.meta.msg)
+            this.menus = res.data
         },
-        //菜单的折叠展开
+        // 菜单的折叠展开
         toggleShow: function () {
-            this.isCollapse = !this.isCollapse;
-            this.asideWidth = this.asideWidth == 200 ? 64 : 200;
+            this.isCollapse = !this.isCollapse
+            this.asideWidth = this.asideWidth == 200 ? 64 : 200
         },
-        //更改点击后的激活菜单
+        // 更改点击后的激活菜单
         changeActive: function (index) {
-            window.sessionStorage.setItem('active', index);
-            this.defaultActive = index;
+            window.sessionStorage.setItem('active', index)
+            this.defaultActive = index
         }
-    },
-};
+    }
+}
 </script>
 
 <style lang="less" scoped>

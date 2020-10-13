@@ -14,28 +14,28 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
             administrator: '',
             time: '',
             date: new Date(),
-            weather: {},
+            weather: {}
         }
     },
     created: function () {
-        this.administrator = window.sessionStorage.getItem('username');
-        this.changeTime();
-        this.getWeather();
+        this.administrator = window.sessionStorage.getItem('username')
+        this.changeTime()
+        this.getWeather()
     },
     methods: {
-        //跨域高德请求天气
+        // 跨域高德请求天气
         getWeather: async function () {
-            let mes = window.location;
-            let _baseurl = `//${mes.hostname}:${mes.port}`;
-            let {
+            const mes = window.location
+            const _baseurl = `//${mes.hostname}:${mes.port}`
+            const {
                 data: res
             } = await this.$axios({
-                //由于设置了baseUrl，天气跨域请求需要重写axios的baseURL
+                // 由于设置了baseUrl，天气跨域请求需要重写axios的baseURL
                 baseURL: _baseurl,
                 method: 'get',
                 url: '/amap/weather/weatherInfo',
@@ -44,10 +44,10 @@ export default {
                     city: '440300',
                     extensions: 'base'
                 }
-            });
-            this.weather = res.lives[0];
+            })
+            this.weather = res.lives[0]
         },
-        changeTime() {
+        changeTime () {
             if (this.date.getHours() >= 18) this.time = '晚上好~ 早点结束工作休息吧！'
             else if (this.date.getHours() >= 12) this.time = '下午好~ 来杯下午茶吧！'
             else if (this.date.getHours() >= 8) this.time = '上午好~ 又是元气满满的一天呢'

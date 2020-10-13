@@ -110,13 +110,13 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
             roleList: [],
             allRights: [],
-            defaultProps: { //树形结构属性绑定
-                label: 'authName', //显示标题（节点看到的字段）绑定数组中对象的authName属性
-                children: 'children' //子节点绑定数组对象中的children属性
+            defaultProps: { // 树形结构属性绑定
+                label: 'authName', // 显示标题（节点看到的字段）绑定数组中对象的authName属性
+                children: 'children' // 子节点绑定数组对象中的children属性
             },
             defChkKeys: [],
             dialogVisible: false,
@@ -125,176 +125,178 @@ export default {
             setRightDialogVisible: false,
             addRoleForm: {
                 roleName: '',
-                roleDesc: '',
+                roleDesc: ''
             },
             editRoleForm: {
                 id: 0,
                 roleName: '',
-                roleDesc: '',
+                roleDesc: ''
             },
             addRules: {
                 roleName: [{
                     required: true,
-                    message: "必须输入名称！",
-                    trigger: "blur"
-                }, ]
+                    message: '必须输入名称！',
+                    trigger: 'blur'
+                }]
             },
             editRules: {
                 roleName: [{
                     required: true,
-                    message: "角色名不能为空",
-                    tigger: "blur"
-                }],
+                    message: '角色名不能为空',
+                    tigger: 'blur'
+                }]
 
             },
             delRoleId: 0,
             delRoleName: '',
-            setRightRoleId: '',
+            setRightRoleId: ''
         }
     },
-    created() {
-        this.getRoleList();
+    created () {
+        this.getRoleList()
     },
     methods: {
-        async getRoleList() {
-            let {
+        async getRoleList () {
+            const {
                 data: res
-            } = await this.$axios.get('/roles');
-            if (res.meta.status != 200) return this.$message.error("获取列表失败");
-            this.roleList = res.data;
+            } = await this.$axios.get('/roles')
+            if (res.meta.status != 200) return this.$message.error('获取列表失败')
+            this.roleList = res.data
         },
-        //关闭时清空添加表单
-        addDialogClosed() {
-            this.addRoleForm.roleName = '';
-            this.addRoleForm.roleDesc = '';
+        // 关闭时清空添加表单
+        addDialogClosed () {
+            this.addRoleForm.roleName = ''
+            this.addRoleForm.roleDesc = ''
         },
-        //新增角色预校验与新增操作
-        addRole() {
+        // 新增角色预校验与新增操作
+        addRole () {
             this.$refs.addRoleFormRef.validate(async valid => {
                 if (!valid) return
-                //验证通过则发起添加请求
-                let {
+                // 验证通过则发起添加请求
+                const {
                     data: res
-                } = await this.$axios.post('/roles', this.addRoleForm);
-                if (res.meta.status != 201) return this.$message.error("创建失败!");
-                this.dialogVisible = false;
-                this.getRoleList();
+                } = await this.$axios.post('/roles', this.addRoleForm)
+                if (res.meta.status != 201) return this.$message.error('创建失败!')
+                this.dialogVisible = false
+                this.getRoleList()
                 this.$message({
                     message: res.meta.msg,
-                    type: "success",
-                });
+                    type: 'success'
+                })
             })
         },
-        //显示修改表单
-        showEditDialog(row) {
-            this.editRoleForm.id = row.id;
-            this.editRoleForm.roleName = row.roleName;
-            this.editRoleForm.roleDesc = row.roleDesc;
-            this.editDialogVisible = true;
+        // 显示修改表单
+        showEditDialog (row) {
+            this.editRoleForm.id = row.id
+            this.editRoleForm.roleName = row.roleName
+            this.editRoleForm.roleDesc = row.roleDesc
+            this.editDialogVisible = true
         },
-        //修改角色预验证与发起修改请求
-        editRole() {
+        // 修改角色预验证与发起修改请求
+        editRole () {
             this.$refs.editRoleFormRef.validate(async valid => {
                 if (!valid) return
-                //验证通过则发起添加请求
-                let {
+                // 验证通过则发起添加请求
+                const {
                     data: res
-                } = await this.$axios.put('/roles/' + this.editRoleForm.id, this.editRoleForm);
-                if (res.meta.status != 200) return this.$message.error("修改失败!");
-                this.editDialogVisible = false;
-                this.getRoleList();
+                } = await this.$axios.put('/roles/' + this.editRoleForm.id, this.editRoleForm)
+                if (res.meta.status != 200) return this.$message.error('修改失败!')
+                this.editDialogVisible = false
+                this.getRoleList()
                 this.$message({
                     message: '操作成功！',
-                    type: "success",
-                });
+                    type: 'success'
+                })
             })
         },
-        //显示删除确认表单
-        showDelDialog(row) {
-            this.delRoleId = row.id;
-            this.delRoleName = row.roleName;
-            this.delDialogVisible = true;
+        // 显示删除确认表单
+        showDelDialog (row) {
+            this.delRoleId = row.id
+            this.delRoleName = row.roleName
+            this.delDialogVisible = true
         },
-        //确认删除角色请求
-        async delRole() {
-            let {
+        // 确认删除角色请求
+        async delRole () {
+            const {
                 data: res
-            } = await this.$axios.delete('/roles/' + this.delRoleId);
-            if (res.meta.status != 200) return this.$message.error("删除失败!");
-            this.delDialogVisible = false;
-            this.getRoleList();
+            } = await this.$axios.delete('/roles/' + this.delRoleId)
+            if (res.meta.status != 200) return this.$message.error('删除失败!')
+            this.delDialogVisible = false
+            this.getRoleList()
             this.$message({
                 message: '删除成功！',
-                type: "success",
-            });
+                type: 'success'
+            })
         },
-        //判断是否为第一行
-        isTopCol(index) {
-            return index === 0;
+        // 判断是否为第一行
+        isTopCol (index) {
+            return index === 0
         },
-        //显示权限移除确认框
-        showRemoveRight(role, rightId) {
+        // 显示权限移除确认框
+        showRemoveRight (role, rightId) {
             this.$messagebox.confirm('此操作将永久删除该权限, 是否继续?', '提示', {
                 confirmButtonText: '我就是要删',
                 cancelButtonText: '还是算了',
                 type: 'warning'
-            }).then(async () => { //then方法中是点确定后的操作，catch是点击取消的操作
-                let {
+            }).then(async () => { // then方法中是点确定后的操作，catch是点击取消的操作
+                const {
                     data: res
-                } = await this.$axios.delete(`/roles/${role.id}/rights/${rightId}`); //利用模板字符串快速拼接出请求地址
-                if (res.meta.status != 200) return this.$message.error("权限移除失败!");
-                role.children = res.data; //居然可以通过给形参赋值重新渲染作用域插槽的内容
+                } = await this.$axios.delete(`/roles/${role.id}/rights/${rightId}`) // 利用模板字符串快速拼接出请求地址
+                if (res.meta.status != 200) return this.$message.error('权限移除失败!')
+                role.children = res.data // 居然可以通过给形参赋值重新渲染作用域插槽的内容
                 this.$message({
                     message: res.meta.msg,
-                    type: "success",
-                });
+                    type: 'success'
+                })
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });
-            });
-        },
-        //显示当前角色权限分配列表，需要将当前角色通过作用域插槽传递过来，当前角色的children属性就是权限一级节点
-        async showSetRightDialog(role) {
-            let {
-                data: res
-            } = await this.$axios.get('/rights/tree/');
-            if (res.meta.status != 200) return this.$message.error("出现错误");
-            this.allRights = res.data;
-            this.getDefChkKeys(role, this.defChkKeys);
-            this.setRightRoleId = role.id;
-            this.setRightDialogVisible = true;
-        },
-        //获取当前角色拥有的三级权限
-        getDefChkKeys(node, arr) {
-            if (!node.children) { //如果当前（对象）节点没有children属性则为三级节点，将节点的id值写入数组,退出递归
-                return arr.push(node.id);
-            } else node.children.forEach(element => { //如果当前节点有children属性，则遍历该节点的子节点，并将该节点的子节点及数组作为参数递归调用三级权限判断函数
-                this.getDefChkKeys(element, arr);
+                })
             })
         },
-        //清空树形结构表单的默认勾选defChkKeys数组，利用数组的spice方法，从index=0，清理数组长度个成员即可清空
-        clearSetRightForm() {
-            this.setRightDialogVisible = false;
-            this.defChkKeys.splice(0, this.defChkKeys.length);
+        // 显示当前角色权限分配列表，需要将当前角色通过作用域插槽传递过来，当前角色的children属性就是权限一级节点
+        async showSetRightDialog (role) {
+            const {
+                data: res
+            } = await this.$axios.get('/rights/tree/')
+            if (res.meta.status != 200) return this.$message.error('出现错误')
+            this.allRights = res.data
+            this.getDefChkKeys(role, this.defChkKeys)
+            this.setRightRoleId = role.id
+            this.setRightDialogVisible = true
         },
-        //修改权限
-        async setRight() { //通过引用this.$refs.引用名 ，获取element标签的实例（标签中已经提前定义引用名 ref="引用名"）后，即可使用ele标签的方法了
-            let rids = this.$refs.treeRef.getCheckedKeys().concat(this.$refs.treeRef.getHalfCheckedKeys());
-            rids = rids.join(",");
-            let {
+        // 获取当前角色拥有的三级权限
+        getDefChkKeys (node, arr) {
+            if (!node.children) { // 如果当前（对象）节点没有children属性则为三级节点，将节点的id值写入数组,退出递归
+                return arr.push(node.id)
+            } else {
+ node.children.forEach(element => { // 如果当前节点有children属性，则遍历该节点的子节点，并将该节点的子节点及数组作为参数递归调用三级权限判断函数
+                this.getDefChkKeys(element, arr)
+            })
+}
+        },
+        // 清空树形结构表单的默认勾选defChkKeys数组，利用数组的spice方法，从index=0，清理数组长度个成员即可清空
+        clearSetRightForm () {
+            this.setRightDialogVisible = false
+            this.defChkKeys.splice(0, this.defChkKeys.length)
+        },
+        // 修改权限
+        async setRight () { // 通过引用this.$refs.引用名 ，获取element标签的实例（标签中已经提前定义引用名 ref="引用名"）后，即可使用ele标签的方法了
+            let rids = this.$refs.treeRef.getCheckedKeys().concat(this.$refs.treeRef.getHalfCheckedKeys())
+            rids = rids.join(',')
+            const {
                 data: res
             } = await this.$axios.post(`/roles/${this.setRightRoleId}/rights`, {
                 rids: rids
-            });
-            if (res.meta.status != 200) return this.$message.error("操作出现错误");
+            })
+            if (res.meta.status != 200) return this.$message.error('操作出现错误')
             this.$message({
                 message: res.meta.msg,
-                type: "success",
-            });
-            this.getRoleList();
-            this.setRightDialogVisible = false;
+                type: 'success'
+            })
+            this.getRoleList()
+            this.setRightDialogVisible = false
         }
     }
 }

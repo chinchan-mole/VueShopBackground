@@ -75,13 +75,13 @@
 </template>
 
 <script>
-import _ from "lodash"
+import _ from 'lodash'
 export default {
-    data() {
+    data () {
         return {
-            //步骤进度
+            // 步骤进度
             steps: '0',
-            //表单私有数据
+            // 表单私有数据
             addForm: {
                 goods_name: '',
                 goods_cat: '',
@@ -89,10 +89,10 @@ export default {
                 goods_number: 0,
                 goods_weight: 0,
                 goods_introduce: '',
-                pics: [], //图片路径是个数组，因为一个商品可能有多个图片，每个数组成员就是一个图片的地址
+                pics: [], // 图片路径是个数组，因为一个商品可能有多个图片，每个数组成员就是一个图片的地址
                 attrs: []
             },
-            //表单验证规则
+            // 表单验证规则
             addFormRules: {
                 goods_name: [{
                     required: true,
@@ -118,162 +118,161 @@ export default {
                     required: true,
                     message: '必须选择分类',
                     tigger: 'blur'
-                }],
+                }]
             },
-            //级联选择器数据存储
+            // 级联选择器数据存储
             cateList: [],
-            //级联选择器的选中id数组
+            // 级联选择器的选中id数组
             selectCatId: [],
-            //存储请求到的三级动态静态分类信息
+            // 存储请求到的三级动态静态分类信息
             manyListData: [],
             onlyListData: [],
-            //图片上传请求添加携带token头
+            // 图片上传请求添加携带token头
             headerObj: {
                 Authorization: window.sessionStorage.getItem('token')
             },
             previewVisible: false,
-            previewUrl: '',
+            previewUrl: ''
         }
     },
-    created() {
-        this.getCateList();
+    created () {
+        this.getCateList()
     },
     methods: {
-        //请求级联选择器内容
-        async getCateList() {
-            let {
+        // 请求级联选择器内容
+        async getCateList () {
+            const {
                 data: res
-            } = await this.$axios.get('/categories/');
-            if (res.meta.status !== 200) return;
-            this.cateList = res.data;
+            } = await this.$axios.get('/categories/')
+            if (res.meta.status !== 200) return
+            this.cateList = res.data
         },
-        //级联选择器选中发生变化
-        handleSelChange() {
+        // 级联选择器选中发生变化
+        handleSelChange () {
             if (this.selectCatId.length !== 3) {
-                this.selectCatId = [];
+                this.selectCatId = []
             }
-            this.addForm.goods_cat = this.selectCatId.join(',');
+            this.addForm.goods_cat = this.selectCatId.join(',')
         },
-        beforeTabLeave(activeName, oldActiveName) {
+        beforeTabLeave (activeName, oldActiveName) {
             if (oldActiveName === '0' && this.addForm.goods_cat.length === 0) {
-                this.$message.error('请先选择分类再去其他页面');
+                this.$message.error('请先选择分类再去其他页面')
                 return false
             }
             return true
         },
-        //点击分页获取动态参数与静态属性
-        async tabClick() {
-            //如果跳转进了参数页面则发起获取动态参数请求
+        // 点击分页获取动态参数与静态属性
+        async tabClick () {
+            // 如果跳转进了参数页面则发起获取动态参数请求
             if (this.steps === '1') {
-                //这里直接取级联选择器数组的最后一项this.selectCatId[2]即为三级分类的id
-                let {
+                // 这里直接取级联选择器数组的最后一项this.selectCatId[2]即为三级分类的id
+                const {
                     data: res
                 } = await this.$axios.get(`categories/${this.selectCatId[2]}/attributes`, {
                     params: {
                         sel: 'many'
                     }
-                });
-                if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+                })
+                if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
                 this.$message({
                     type: 'success',
                     message: res.meta.msg
-                });
-                //让非空字符串变数组，空字符串变空数组
+                })
+                // 让非空字符串变数组，空字符串变空数组
                 res.data.forEach(element => {
                     if (element.attr_vals !== '') element.attr_vals = element.attr_vals.split(' ')
                     else element.attr_vals = []
                 })
-                this.manyListData = res.data;
-                console.log(this.manyListData);
+                this.manyListData = res.data
+                console.log(this.manyListData)
             }
-            //如果跳转进了属性页面则发起获取静态属性请求
+            // 如果跳转进了属性页面则发起获取静态属性请求
             if (this.steps === '2') {
-                let {
+                const {
                     data: res2
                 } = await this.$axios.get(`categories/${this.selectCatId[2]}/attributes`, {
                     params: {
                         sel: 'only'
                     }
-                });
-                if (res2.meta.status !== 200) return this.$message.error(res2.meta.msg);
+                })
+                if (res2.meta.status !== 200) return this.$message.error(res2.meta.msg)
                 this.$message({
                     type: 'success',
                     message: res2.meta.msg
-                });
-                this.onlyListData = res2.data;
+                })
+                this.onlyListData = res2.data
             }
         },
-        //图片预览
-        handlePreview(file) {
-            this.previewUrl = file.response.data.url;
-            this.previewVisible = true;
+        // 图片预览
+        handlePreview (file) {
+            this.previewUrl = file.response.data.url
+            this.previewVisible = true
         },
-        //删除图片
-        handleRemove(file) {
-            //1.获取删除图片的临时路径
-            const tmpPath = file.response.data.tmp_path;
-            //2.在数组中查到该路径对应的索引值并删掉该成员同时退出遍历
+        // 删除图片
+        handleRemove (file) {
+            // 1.获取删除图片的临时路径
+            const tmpPath = file.response.data.tmp_path
+            // 2.在数组中查到该路径对应的索引值并删掉该成员同时退出遍历
             this.addForm.pics.forEach((element, index) => {
                 if (element.pic === tmpPath) {
-                    this.addForm.pics.splice(index, 1);
-                    return
+                    this.addForm.pics.splice(index, 1)
                 }
             })
         },
-        //一张图片上传成功后的操作
-        onSuccess(res) {
-            if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+        // 一张图片上传成功后的操作
+        onSuccess (res) {
+            if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
             this.$message({
                 type: 'success',
                 message: res.meta.msg
-            });
+            })
             this.addForm.pics.push({
                 pic: res.data.tmp_path
-            });
+            })
         },
-        //添加商品
-        async addGoods() {
+        // 添加商品
+        async addGoods () {
             this.$refs.addFormRef.validate(async valid => {
-                if (!valid) return this.$message.error('请检查必填项目是否填写完毕');
-                //发起请求前的预处理 1.深拷贝原来的表单数据对象，所有的预处理操作以及最后提交只基于该拷贝对象,将操作与私有数据隔离  2.attr动静态参数的处理 
-                let form = _.cloneDeep(this.addForm);
-                let manyAttrData = [];
-                let onlyAttrData = [];
-                //动态参数预处理
+                if (!valid) return this.$message.error('请检查必填项目是否填写完毕')
+                // 发起请求前的预处理 1.深拷贝原来的表单数据对象，所有的预处理操作以及最后提交只基于该拷贝对象,将操作与私有数据隔离  2.attr动静态参数的处理
+                const form = _.cloneDeep(this.addForm)
+                const manyAttrData = []
+                const onlyAttrData = []
+                // 动态参数预处理
                 this.manyListData.forEach(element => {
                     manyAttrData.push({
                         attr_id: element.attr_id,
                         attr_value: element.attr_vals.join(' ')
                     })
-                });
-                //静态参数预处理
+                })
+                // 静态参数预处理
                 this.onlyListData.forEach(element => {
                     onlyAttrData.push({
                         attr_id: element.attr_id,
                         attr_value: element.attr_vals
                     })
-                });
-                //参数数组合并
-                form.attrs = [...onlyAttrData, ...manyAttrData];
-                console.log(form);
-                //发起请求
-                let {
+                })
+                // 参数数组合并
+                form.attrs = [...onlyAttrData, ...manyAttrData]
+                console.log(form)
+                // 发起请求
+                const {
                     data: res
-                } = await this.$axios.post(`goods`, form);
-                if (res.meta.status != 201) return this.$message.error(res.meta.msg);
-                this.steps = '6';
+                } = await this.$axios.post('goods', form)
+                if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
+                this.steps = '6'
                 this.$notify({
                     title: '商品创建成功',
-                    message: `3秒后返回商品列表页面`,
+                    message: '3秒后返回商品列表页面',
                     type: 'success',
                     duration: 3000,
                     onClose: () => {
-                        this.$router.push('/goods/');
+                        this.$router.push('/goods/')
                     }
-                });
+                })
             })
         }
-    },
+    }
 }
 </script>
 

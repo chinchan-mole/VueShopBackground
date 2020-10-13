@@ -87,20 +87,20 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
-            //查询及列表相关
+            // 查询及列表相关
             queryInfo: {
                 query: '',
                 pagenum: 1,
-                pagesize: 10,
+                pagesize: 10
             },
             ordersList: [],
             total: 0,
             editDialogVisible: false,
             addressForm: {
                 address1: '',
-                address2: '',
+                address2: ''
             },
             addressFormRules: {
                 address2: [{
@@ -109,7 +109,7 @@ export default {
                     tigger: 'blur'
                 }]
             },
-            //省市区县联动
+            // 省市区县联动
             province: [],
             setProvince: '',
             //
@@ -120,62 +120,62 @@ export default {
             disableArea: true,
             area: [],
             setArea: '',
-            //物流
+            // 物流
             progressDialogVisible: false,
-            progressData: [],
+            progressData: []
         }
     },
-    created() {
-        this.queryOrders();
-        this.getProvince();
+    created () {
+        this.queryOrders()
+        this.getProvince()
     },
     methods: {
-        //查询列表
-        async queryOrders() {
-            let {
+        // 查询列表
+        async queryOrders () {
+            const {
                 data: res
-            } = await this.$axios.get(`/orders/`, {
+            } = await this.$axios.get('/orders/', {
                 params: this.queryInfo
-            });
-            if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+            })
+            if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
             this.$message({
                 type: 'success',
                 message: res.meta.msg
-            });
-            res.data.goods.forEach(element => {
-                element.create_time = this.timeFormat(element.create_time);
-                element.update_time = this.timeFormat(element.update_time);
             })
-            this.ordersList = res.data.goods;
-            this.total = res.data.total;
+            res.data.goods.forEach(element => {
+                element.create_time = this.timeFormat(element.create_time)
+                element.update_time = this.timeFormat(element.update_time)
+            })
+            this.ordersList = res.data.goods
+            this.total = res.data.total
         },
-        //调用高德API跨域获取城市列表
-        async getProvince() {
-            let mes = window.location;
-            let _baseurl = `//${mes.hostname}:${mes.port}`;
-            let {
+        // 调用高德API跨域获取城市列表
+        async getProvince () {
+            const mes = window.location
+            const _baseurl = `//${mes.hostname}:${mes.port}`
+            const {
                 data: res
             } = await this.$axios({
-                //由于设置了baseUrl，跨域请求需要重写axios的baseURL
+                // 由于设置了baseUrl，跨域请求需要重写axios的baseURL
                 baseURL: _baseurl,
                 method: 'get',
                 url: '/amap/config/district',
                 params: {
-                    key: 'c1b41b8aaed225c4bd3a83b8a1c9c08c',
+                    key: 'c1b41b8aaed225c4bd3a83b8a1c9c08c'
                 }
-            });
-            this.province = res.districts[0].districts;
+            })
+            this.province = res.districts[0].districts
         },
-        //省选择发生变化,清空市+区内容、请求市级内容、解锁市级选择、禁用区县选择
-        async getCity() {
-            this.setCity = '';
-            this.setArea = '';
-            let mes = window.location;
-            let _baseurl = `//${mes.hostname}:${mes.port}`;
-            let {
+        // 省选择发生变化,清空市+区内容、请求市级内容、解锁市级选择、禁用区县选择
+        async getCity () {
+            this.setCity = ''
+            this.setArea = ''
+            const mes = window.location
+            const _baseurl = `//${mes.hostname}:${mes.port}`
+            const {
                 data: res
             } = await this.$axios({
-                //由于设置了baseUrl，跨域请求需要重写axios的baseURL
+                // 由于设置了baseUrl，跨域请求需要重写axios的baseURL
                 baseURL: _baseurl,
                 method: 'get',
                 url: '/amap/config/district',
@@ -183,20 +183,20 @@ export default {
                     key: 'c1b41b8aaed225c4bd3a83b8a1c9c08c',
                     keywords: this.setProvince
                 }
-            });
-            this.city = res.districts[0].districts;
-            this.disableCity = false;
-            this.disableArea = true;
+            })
+            this.city = res.districts[0].districts
+            this.disableCity = false
+            this.disableArea = true
         },
-        //市发生变化，请求区/县
-        async getArea() {
-            this.setArea = '';
-            let mes = window.location;
-            let _baseurl = `//${mes.hostname}:${mes.port}`;
-            let {
+        // 市发生变化，请求区/县
+        async getArea () {
+            this.setArea = ''
+            const mes = window.location
+            const _baseurl = `//${mes.hostname}:${mes.port}`
+            const {
                 data: res
             } = await this.$axios({
-                //由于设置了baseUrl，跨域请求需要重写axios的baseURL
+                // 由于设置了baseUrl，跨域请求需要重写axios的baseURL
                 baseURL: _baseurl,
                 method: 'get',
                 url: '/amap/config/district',
@@ -204,76 +204,76 @@ export default {
                     key: 'c1b41b8aaed225c4bd3a83b8a1c9c08c',
                     keywords: this.setCity
                 }
-            });
-            this.area = res.districts[0].districts;
-            this.disableArea = false;
+            })
+            this.area = res.districts[0].districts
+            this.disableArea = false
         },
-        //区发生变化，只需要更新address1即可
-        setAddress1() {
-            this.addressForm.address1 = this.setProvince + this.setCity + this.setArea;
+        // 区发生变化，只需要更新address1即可
+        setAddress1 () {
+            this.addressForm.address1 = this.setProvince + this.setCity + this.setArea
         },
-        //时间格式化及补0
-        timeFormat(time) {
-            let date = new Date(time);
-            let year = date.getFullYear();
-            let month = this.dateFormat(date.getMonth() + 1);
-            let day = this.dateFormat(date.getDate());
-            let hour = this.dateFormat(date.getHours());
-            let minute = this.dateFormat(date.getMinutes());
-            let second = this.dateFormat(date.getSeconds());
+        // 时间格式化及补0
+        timeFormat (time) {
+            const date = new Date(time)
+            const year = date.getFullYear()
+            const month = this.dateFormat(date.getMonth() + 1)
+            const day = this.dateFormat(date.getDate())
+            const hour = this.dateFormat(date.getHours())
+            const minute = this.dateFormat(date.getMinutes())
+            const second = this.dateFormat(date.getSeconds())
             return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
         },
-        dateFormat(num) {
-            return num < 10 ? '0' + num : '' + num;
+        dateFormat (num) {
+            return num < 10 ? '0' + num : '' + num
         },
-        //分页
-        handleSizeChange(newSize) {
-            this.queryInfo.pagesize = newSize;
-            this.queryOrders();
+        // 分页
+        handleSizeChange (newSize) {
+            this.queryInfo.pagesize = newSize
+            this.queryOrders()
         },
-        handleCurrentChange(newPage) {
-            this.queryInfo.pagenum = newPage;
-            this.queryOrders();
+        handleCurrentChange (newPage) {
+            this.queryInfo.pagenum = newPage
+            this.queryOrders()
         },
-        //显示修改地址框,后台没有提供修改接口，这里只做地址联动效果和最终地址拼接
-        showEditDialog() {
-            this.editDialogVisible = true;
+        // 显示修改地址框,后台没有提供修改接口，这里只做地址联动效果和最终地址拼接
+        showEditDialog () {
+            this.editDialogVisible = true
         },
-        editAddress() {
+        editAddress () {
             this.$refs.addressFormRef.validate(valid => {
                 if (!valid || this.setArea == '') return this.$message.error('请检查地址是否填写完整！')
-                this.editDialogVisible = false;
+                this.editDialogVisible = false
                 this.$notify.info({
                     title: '消息',
                     message: `您最终输入的地址是： ${this.addressForm.address1 + '' + this.addressForm.address2}`,
-                    duration: 0,
-                });
-                this.cleanForm();
-            });
+                    duration: 0
+                })
+                this.cleanForm()
+            })
         },
-        cleanForm() {
-            this.setProvince = '';
-            this.setCity = '';
-            this.setArea = '';
-            this.addressForm.address1 = '';
-            this.addressForm.address2 = '';
-            this.disableArea = true;
-            this.disableCity = true;
+        cleanForm () {
+            this.setProvince = ''
+            this.setCity = ''
+            this.setArea = ''
+            this.addressForm.address1 = ''
+            this.addressForm.address2 = ''
+            this.disableArea = true
+            this.disableCity = true
         },
-        //显示物流
-        async showProgress() {
-            let {
+        // 显示物流
+        async showProgress () {
+            const {
                 data: res
-            } = await this.$axios.get(`/kuaidi/1106975712662`);
-            if (res.meta.status !== 200) return this.$message.error(res.meta.message);
+            } = await this.$axios.get('/kuaidi/1106975712662')
+            if (res.meta.status !== 200) return this.$message.error(res.meta.message)
             this.$message({
                 type: 'success',
                 message: res.meta.message
-            });
-            this.progressData = res.data;
-            this.progressDialogVisible = true;
-        },
-    },
+            })
+            this.progressData = res.data
+            this.progressDialogVisible = true
+        }
+    }
 }
 </script>
 

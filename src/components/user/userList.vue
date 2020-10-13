@@ -124,25 +124,25 @@
 
 <script>
 export default {
-    data() {
-        //自定义手机号、邮箱校验规则（）
+    data () {
+        // 自定义手机号、邮箱校验规则（）
         var checkEmail = (rule, value, cb) => {
-            const emailReg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/;
-            //校验通过，直接返回调用回调函数cb退出校验，不通过则利用回调函数报错
+            const emailReg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/
+            // 校验通过，直接返回调用回调函数cb退出校验，不通过则利用回调函数报错
             if (emailReg.test(value) || value == '') return cb()
-            cb(new Error("请输入合法的邮箱"))
-        };
+            cb(new Error('请输入合法的邮箱'))
+        }
         var checkMobile = (rule, value, cb) => {
-            const mobileReg = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/;
+            const mobileReg = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/
             if (mobileReg.test(value) || value == '') return cb()
-            cb(new Error("请输入合法的手机号码"))
-        };
+            cb(new Error('请输入合法的手机号码'))
+        }
         return {
             total: 0,
             queryUserParams: {
                 query: '',
                 pagenum: 1,
-                pagesize: 5,
+                pagesize: 5
             },
             users: [],
             dialogVisible: false,
@@ -155,197 +155,197 @@ export default {
                 username: '',
                 password: '',
                 email: '',
-                mobile: '',
+                mobile: ''
             },
             editUserForm: {
                 id: 0,
                 username: '',
                 email: '',
-                mobile: '',
+                mobile: ''
             },
             delUserName: '',
             delUserId: 0,
             setRoleUserForm: {
                 username: '',
                 id: 0,
-                role: '',
+                role: ''
             },
             rules: {
                 username: [{
                         required: true,
-                        message: "必须输入用户名！",
-                        trigger: "blur"
+                        message: '必须输入用户名！',
+                        trigger: 'blur'
                     },
                     {
                         min: 5,
                         max: 12,
-                        message: "用户名长度需要在5-12位之间",
-                        trigger: "blur"
-                    },
+                        message: '用户名长度需要在5-12位之间',
+                        trigger: 'blur'
+                    }
                 ],
                 password: [{
                         required: true,
-                        message: "必须输入密码！",
-                        trigger: "blur"
+                        message: '必须输入密码！',
+                        trigger: 'blur'
                     },
                     {
                         min: 6,
-                        message: "密码长度至少为6位",
-                        trigger: "blur"
-                    },
+                        message: '密码长度至少为6位',
+                        trigger: 'blur'
+                    }
                 ],
                 email: [{
                     validator: checkEmail,
                     required: false,
-                    trigger: "blur"
+                    trigger: 'blur'
                 }],
                 mobile: [{
                     validator: checkMobile,
                     required: false,
-                    trigger: "blur"
-                }],
-            },
+                    trigger: 'blur'
+                }]
+            }
         }
     },
     created: async function () {
-        this.getUserList();
+        this.getUserList()
     },
     methods: {
-        //获取用户列表+用户名查询用户+清空查询框
+        // 获取用户列表+用户名查询用户+清空查询框
         getUserList: async function () {
-            let {
+            const {
                 data: res
             } = await this.$axios.get('/users', {
                 params: this.queryUserParams
-            });
-            if (res.meta.status != 200) return this.$message.error("用户列表获取失败");
-            this.users = res.data.users;
-            this.total = res.data.total;
+            })
+            if (res.meta.status != 200) return this.$message.error('用户列表获取失败')
+            this.users = res.data.users
+            this.total = res.data.total
         },
-        //每页显示条数发生改变的事件
+        // 每页显示条数发生改变的事件
         handleSizeChange: function (newSize) {
-            this.queryUserParams.pagesize = newSize;
-            this.getUserList();
+            this.queryUserParams.pagesize = newSize
+            this.getUserList()
         },
-        //页码发生改变的事件
+        // 页码发生改变的事件
         handleCurrentChange: function (newPagenum) {
-            this.queryUserParams.pagenum = newPagenum;
-            this.getUserList();
+            this.queryUserParams.pagenum = newPagenum
+            this.getUserList()
         },
-        //修改用户状态
+        // 修改用户状态
         changeState: async function (state, id) {
-            let {
+            const {
                 data: res
-            } = await this.$axios.put('/users/' + id + '/state/' + state);
-            if (res.meta.status != 200) return this.$message.error("状态修改失败");
+            } = await this.$axios.put('/users/' + id + '/state/' + state)
+            if (res.meta.status != 200) return this.$message.error('状态修改失败')
             this.$message({
                 message: res.meta.msg,
-                type: "success",
-            });
-        },
-        //清空添加表单
-        addDialogClosed() {
-            this.$refs.addUserFormRef.resetFields();
-        },
-        //添加新用户
-        addUser() {
-            this.$refs.addUserFormRef.validate(async valid => {
-                if (!valid) return
-                //验证通过则发起添加请求
-                let {
-                    data: res
-                } = await this.$axios.post('/users', this.addUserForm);
-                if (res.meta.status != 201) return this.$message.error("新增操作失败!");
-                this.dialogVisible = false;
-                this.getUserList();
-                this.$message({
-                    message: res.meta.msg,
-                    type: "success",
-                });
+                type: 'success'
             })
         },
-        //显示编辑用户对话框并填充内容
-        showEditDialog(row) {
-            this.editUserForm.username = row.username;
-            this.editUserForm.email = row.email;
-            this.editUserForm.mobile = row.mobile;
-            this.editUserForm.id = row.id;
-            this.editDialogVisible = true;
+        // 清空添加表单
+        addDialogClosed () {
+            this.$refs.addUserFormRef.resetFields()
         },
-        //编辑的预验证及发起请求
-        editUser() {
+        // 添加新用户
+        addUser () {
+            this.$refs.addUserFormRef.validate(async valid => {
+                if (!valid) return
+                // 验证通过则发起添加请求
+                const {
+                    data: res
+                } = await this.$axios.post('/users', this.addUserForm)
+                if (res.meta.status != 201) return this.$message.error('新增操作失败!')
+                this.dialogVisible = false
+                this.getUserList()
+                this.$message({
+                    message: res.meta.msg,
+                    type: 'success'
+                })
+            })
+        },
+        // 显示编辑用户对话框并填充内容
+        showEditDialog (row) {
+            this.editUserForm.username = row.username
+            this.editUserForm.email = row.email
+            this.editUserForm.mobile = row.mobile
+            this.editUserForm.id = row.id
+            this.editDialogVisible = true
+        },
+        // 编辑的预验证及发起请求
+        editUser () {
             this.$refs.editUserFormRef.validate(async valid => {
                 if (!valid) return
-                //预验证通过则发起添加请求
-                let {
+                // 预验证通过则发起添加请求
+                const {
                     data: res
                 } = await this.$axios.put('/users/' + this.editUserForm.id, {
                     id: this.editUserForm.id,
                     email: this.editUserForm.email,
-                    mobile: this.editUserForm.mobile,
-                });
-                if (res.meta.status != 200) return this.$message.error(res.meta.msg);
-                this.editDialogVisible = false;
-                this.getUserList();
+                    mobile: this.editUserForm.mobile
+                })
+                if (res.meta.status != 200) return this.$message.error(res.meta.msg)
+                this.editDialogVisible = false
+                this.getUserList()
                 this.$message({
                     message: res.meta.msg,
-                    type: "success",
-                });
-            });
+                    type: 'success'
+                })
+            })
         },
-        //显示删除用户弹出框
-        showDelConfirm(row) {
-            this.delUserName = row.username;
-            this.delUserId = row.id;
-            this.delDialogVisible = true;
+        // 显示删除用户弹出框
+        showDelConfirm (row) {
+            this.delUserName = row.username
+            this.delUserId = row.id
+            this.delDialogVisible = true
         },
-        //确认用户删除
-        async delUser() {
-            let {
+        // 确认用户删除
+        async delUser () {
+            const {
                 data: res
             } = await this.$axios.delete('/users/' + this.delUserId, {
                 params: {
                     id: this.delUserId
                 }
-            });
-            if (res.meta.status != 200) return this.$message.error("删除失败!");
-            this.delDialogVisible = false;
+            })
+            if (res.meta.status != 200) return this.$message.error('删除失败!')
+            this.delDialogVisible = false
             this.$message({
                 message: res.meta.msg,
-                type: "success",
-            });
-            this.getUserList();
+                type: 'success'
+            })
+            this.getUserList()
         },
-        //显示用户角色分配表单并获取用户的角色ID
-        async showRoleForm(row) {
-            this.setRoleUserForm.id = row.id;
-            this.setRoleUserForm.username = row.username;
-            this.setRoleUserForm.role = row.role_name;
-            let {
+        // 显示用户角色分配表单并获取用户的角色ID
+        async showRoleForm (row) {
+            this.setRoleUserForm.id = row.id
+            this.setRoleUserForm.username = row.username
+            this.setRoleUserForm.role = row.role_name
+            const {
                 data: res
-            } = await this.$axios.get('/roles');
-            if (res.meta.status !== 200) return;
-            this.rolesMenu = res.data;
-            this.roleDialogVisible = true;
+            } = await this.$axios.get('/roles')
+            if (res.meta.status !== 200) return
+            this.rolesMenu = res.data
+            this.roleDialogVisible = true
         },
-        //分配角色请求
-        async setRole() {
-            if(!this.setRoleId) return this.$message.error('请选择要分配的身份！');
-            let {
+        // 分配角色请求
+        async setRole () {
+            if (!this.setRoleId) return this.$message.error('请选择要分配的身份！')
+            const {
                 data: res
             } = await this.$axios.put(`/users/${this.setRoleUserForm.id}/role`, {
                 rid: this.setRoleId
-            });
-            if (res.meta.status !== 200) return;
+            })
+            if (res.meta.status !== 200) return
             this.$message({
                 message: res.meta.msg,
-                type: "success",
-            });
-            this.getUserList();
-            this.roleDialogVisible = false;
+                type: 'success'
+            })
+            this.getUserList()
+            this.roleDialogVisible = false
         }
     }
-};
+}
 </script>
 
 <style lang="less" scoped>

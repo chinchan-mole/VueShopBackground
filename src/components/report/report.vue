@@ -13,14 +13,14 @@
 </template>
 
 <script>
-//在组件中按需引入echarts
+// 在组件中按需引入echarts
 import echarts from 'echarts'
-//导入lodash
+// 导入lodash
 import _ from 'lodash'
 export default {
-    data() {
+    data () {
         return {
-            //图表配置项
+            // 图表配置项
             options: {
                 title: {
                     text: '用户来源'
@@ -47,28 +47,28 @@ export default {
                     type: 'value'
                 }]
             },
-            reportData: {},
+            reportData: {}
         }
     },
-    mounted() {
-        //渲染echarts的操作必须在mounted周期函数中（因为这时候才有dom,echarts基于dom渲染）
-        this.getReport();
+    mounted () {
+        // 渲染echarts的操作必须在mounted周期函数中（因为这时候才有dom,echarts基于dom渲染）
+        this.getReport()
     },
     methods: {
-        async getReport() {
-            let {
+        async getReport () {
+            const {
                 data: res
-            } = await this.$axios.get(`reports/type/1`);
-            if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+            } = await this.$axios.get('reports/type/1')
+            if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
             this.$message({
                 type: 'success',
                 message: res.meta.msg
-            });
-            //将返回对象与option合并
-            const result = _.merge(res.data, this.options);
-            var myChart = echarts.init(document.getElementById('main'));
-            myChart.setOption(result);
-        },
+            })
+            // 将返回对象与option合并
+            const result = _.merge(res.data, this.options)
+            var myChart = echarts.init(document.getElementById('main'))
+            myChart.setOption(result)
+        }
     }
 }
 </script>

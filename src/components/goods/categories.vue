@@ -64,21 +64,21 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
-            //添加商品分类对话框开关
+            // 添加商品分类对话框开关
             addDialogVisible: false,
-            //分类列表容器
+            // 分类列表容器
             cateList: [],
-            //树形表格列配置文件
+            // 树形表格列配置文件
             columns: [{
-                    label: "分类名称", //列名称
-                    prop: 'cat_name', //列显示数据所绑定的数组成员对象的属性名称
+                    label: '分类名称', // 列名称
+                    prop: 'cat_name' // 列显示数据所绑定的数组成员对象的属性名称
                 },
                 {
                     label: '是否有效',
-                    type: 'template', //该列使用自定义模板
-                    template: 'isok', //模板使用哪个插槽
+                    type: 'template', // 该列使用自定义模板
+                    template: 'isok' // 模板使用哪个插槽
                 },
                 {
                     label: '排序',
@@ -89,9 +89,9 @@ export default {
                     label: '操作',
                     type: 'template',
                     template: 'handle'
-                },
+                }
             ],
-            //分类列表查询参数设置（影响到分页功能）
+            // 分类列表查询参数设置（影响到分页功能）
             cateQueryInfo: {
                 type: 3,
                 pagenum: 1,
@@ -99,17 +99,17 @@ export default {
             },
             // 分页其他数据保存处
             paginationInfo: {
-                total: 0,
+                total: 0
             },
-            //所有分类信息存储位置
+            // 所有分类信息存储位置
             fatherCatList: [],
-            //添加分类表单及对应表单规则
+            // 添加分类表单及对应表单规则
             addCatForm: {
                 cat_pid: 0,
                 cat_name: '',
-                cat_level: 0,
+                cat_level: 0
             },
-            //添加表单中选中父级分类的ID数组
+            // 添加表单中选中父级分类的ID数组
             addCatFathersId: [],
             addCatFormRules: {
                 cat_name: [{
@@ -118,12 +118,12 @@ export default {
                     tigger: 'blur'
                 }]
             },
-            //编辑分类表单显示开关
+            // 编辑分类表单显示开关
             editDialogVisible: false,
-            //编辑分类存储
+            // 编辑分类存储
             editCatForm: {
                 cat_name: '',
-                cat_id: '',
+                cat_id: ''
             },
             editCatFormRules: {
                 cat_name: [{
@@ -131,134 +131,133 @@ export default {
                     message: '名称不得为空！',
                     tigger: 'blur'
                 }]
-            },
+            }
         }
     },
-    created() {
-        this.getCateList();
+    created () {
+        this.getCateList()
     },
     methods: {
-        //请求分类树形列表
-        async getCateList() {
-            let {
+        // 请求分类树形列表
+        async getCateList () {
+            const {
                 data: res
             } = await this.$axios.get('/categories/', {
                 params: this.cateQueryInfo
-            });
-            this.cateList = res.data.result;
-            this.paginationInfo.total = res.data.total;
+            })
+            this.cateList = res.data.result
+            this.paginationInfo.total = res.data.total
         },
-        //分页的每页展示数量改变的行为
-        handleSizeChange(newSize) {
-            this.cateQueryInfo.pagesize = newSize;
-            this.getCateList();
+        // 分页的每页展示数量改变的行为
+        handleSizeChange (newSize) {
+            this.cateQueryInfo.pagesize = newSize
+            this.getCateList()
         },
-        //分页的当前页码发生改变的行为
-        handleCurrentChange(newPage) {
-            this.cateQueryInfo.pagenum = newPage;
-            this.getCateList();
+        // 分页的当前页码发生改变的行为
+        handleCurrentChange (newPage) {
+            this.cateQueryInfo.pagenum = newPage
+            this.getCateList()
         },
-        //显示添加分类列表
-        async showAddCatForm() {
-            let {
+        // 显示添加分类列表
+        async showAddCatForm () {
+            const {
                 data: res
             } = await this.$axios.get('/categories/', {
                 params: {
                     type: 2
                 }
-            });
-            if (res.meta.status !== 200) return;
-            this.fatherCatList = res.data;
-            this.addDialogVisible = true;
+            })
+            if (res.meta.status !== 200) return
+            this.fatherCatList = res.data
+            this.addDialogVisible = true
         },
-        //添加表单级联选择器选项发生变化的事件
-        selectFatherCat() {
-            //先根据数组长度确认要添加的是几集分类，然后分情况更新数据
+        // 添加表单级联选择器选项发生变化的事件
+        selectFatherCat () {
+            // 先根据数组长度确认要添加的是几集分类，然后分情况更新数据
             if (this.addCatFathersId.length === 0) {
-                this.addCatForm.cat_pid = 0;
-                this.addCatForm.cat_level = 0;
+                this.addCatForm.cat_pid = 0
+                this.addCatForm.cat_level = 0
             } else if (this.addCatFathersId.length === 1) {
-                this.addCatForm.cat_pid = this.addCatFathersId[0];
-                this.addCatForm.cat_level = 1;
+                this.addCatForm.cat_pid = this.addCatFathersId[0]
+                this.addCatForm.cat_level = 1
             } else {
-                this.addCatForm.cat_pid = this.addCatFathersId[1];
-                this.addCatForm.cat_level = 2;
+                this.addCatForm.cat_pid = this.addCatFathersId[1]
+                this.addCatForm.cat_level = 2
             }
         },
-        addCate() {
+        addCate () {
             this.$refs.addCatFormRef.validate(async valid => {
-                if (!valid) return;
-                let {
+                if (!valid) return
+                const {
                     data: res
-                } = await this.$axios.post('/categories/', this.addCatForm);
-                if (res.meta.status != 201) return this.$message.error("添加失败!");
+                } = await this.$axios.post('/categories/', this.addCatForm)
+                if (res.meta.status !== 201) return this.$message.error('添加失败!')
                 this.$message({
                     message: res.meta.msg,
-                    type: "success",
-                });
-                this.clearAddForm();
-                this.addDialogVisible = false;
-                this.getCateList();
+                    type: 'success'
+                })
+                this.clearAddForm()
+                this.addDialogVisible = false
+                this.getCateList()
             })
         },
-        //重置添加分类表单
-        clearAddForm() {
-            this.addCatForm.cat_pid = 0;
-            this.addCatForm.cat_name = '';
-            this.addCatForm.cat_level = 0;
-            this.addCatFathersId = [];
+        // 重置添加分类表单
+        clearAddForm () {
+            this.addCatForm.cat_pid = 0
+            this.addCatForm.cat_name = ''
+            this.addCatForm.cat_level = 0
+            this.addCatFathersId = []
         },
-        //删除确认
-        delComfirm(cat_name, cat_id) {
+        // 删除确认
+        delComfirm (cat_name, cat_id) {
             this.$messagebox.confirm('是否删除?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                let {
+                const {
                     data: res
                 } = await this.$axios.delete(`/categories/${cat_id}`, {
                     cat_name: cat_name
                 })
-                if (res.meta.status !== 200) return this.$message.error("删除失败!");
-                this.getCateList();
+                if (res.meta.status !== 200) return this.$message.error('删除失败!')
+                this.getCateList()
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
-                });
+                })
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });
-            });
+                })
+            })
         },
-        //显示编辑表单并填充数据
-        showEditDialog(cat_name, cat_id) {
-            this.editCatForm.cat_name = cat_name;
-            this.editCatForm.cat_id = cat_id;
-            this.editDialogVisible = true;
+        // 显示编辑表单并填充数据
+        showEditDialog (cat_name, cat_id) {
+            this.editCatForm.cat_name = cat_name
+            this.editCatForm.cat_id = cat_id
+            this.editDialogVisible = true
         },
-        //编辑预验证与提交请求,编辑表单无需清空，毕竟点其他的编辑新数据会覆盖旧数据
-        editCat() {
+        // 编辑预验证与提交请求,编辑表单无需清空，毕竟点其他的编辑新数据会覆盖旧数据
+        editCat () {
             this.$refs.editFormRef.validate(async valid => {
-                if (!valid) return;
-                let {
+                if (!valid) return
+                const {
                     data: res
                 } = await this.$axios.put(`/categories/${this.editCatForm.cat_id}`, {
                     cat_name: this.editCatForm.cat_name
-                });
-                if (res.meta.status != 200) return this.$message.error('修改失败！');
-                this.editDialogVisible = false;
-                this.getCateList();
+                })
+                if (res.meta.status != 200) return this.$message.error('修改失败！')
+                this.editDialogVisible = false
+                this.getCateList()
                 this.$message({
                     type: 'success',
                     message: res.meta.msg
-                });
-
+                })
             })
         }
-    },
+    }
 }
 </script>
 

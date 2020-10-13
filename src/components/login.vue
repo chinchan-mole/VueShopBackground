@@ -22,68 +22,66 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
             form: {
-                username: "admin",
-                password: "123456",
+                username: 'admin',
+                password: '123456'
             },
             rules: {
                 username: [{
                         required: true,
-                        message: "请输入用户名！",
-                        trigger: "blur"
+                        message: '请输入用户名！',
+                        trigger: 'blur'
                     },
                     {
                         min: 5,
                         max: 12,
-                        message: "用户名长度在5-12位之间",
-                        trigger: "blur"
-                    },
+                        message: '用户名长度在5-12位之间',
+                        trigger: 'blur'
+                    }
                 ],
                 password: [{
                         required: true,
-                        message: "请输入密码！",
-                        trigger: "blur"
+                        message: '请输入密码！',
+                        trigger: 'blur'
                     },
                     {
                         min: 6,
-                        message: "密码长度至少为6位",
-                        trigger: "blur"
-                    },
-                ],
-            },
+                        message: '密码长度至少为6位',
+                        trigger: 'blur'
+                    }
+                ]
+            }
         }
     },
     methods: {
         reset: function () {
-            this.form.username = "";
-            this.form.password = "";
+            this.form.username = ''
+            this.form.password = ''
         },
         check: function () {
-            return this.form.username.length >= 5 &&
+            return !!(this.form.username.length >= 5 &&
                 this.form.username.length <= 12 &&
-                this.form.password.length >= 6 ?
-                true :
-                false;
+                this.form.password.length >= 6)
         },
         login: async function () {
             if (this.check()) {
-                let {
+                const {
                     data: res
-                } = await this.$axios.post("/login", this.form);
-                if (res.meta.status != 200) return this.$message.error("登录失败");
-                window.sessionStorage.setItem("token", res.data.token); //保存token至会话存储
+                } = await this.$axios.post('/login', this.form)
+                if (res.meta.status != 200) return this.$message.error('登录失败')
+                window.sessionStorage.setItem('token', res.data.token) // 保存token至会话存储
                 this.$message({
-                    message: "登录成功",
-                    type: "success",
-                });
-                window.sessionStorage.setItem('username',this.form.username);//用户名放置在会话存储中
-                this.$router.push('/home'); //登录后发生路由跳转
+                    message: '登录成功',
+                    type: 'success'
+                })
+                window.sessionStorage.setItem('username', this.form.username)// 用户名放置在会话存储中
+                this.$router.push('/home') // 登录后发生路由跳转
             }
-        },
-    },
-};
+        }
+    }
+}
 </script>
 
 <style lang="less" scoped>

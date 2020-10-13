@@ -31,21 +31,21 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
             rightList: []
         }
     },
-    created() {
-        this.getRightList();
+    created () {
+        this.getRightList()
     },
     methods: {
-        async getRightList() {
-            let {
+        async getRightList () {
+            const {
                 data: res
-            } = await this.$axios.get('rights/list');
-            if (res.meta.status != 200) return this.$message.error("获取权限列表失败");
-            this.rightList = res.data;
+            } = await this.$axios.get('rights/list')
+            if (res.meta.status != 200) return this.$message.error('获取权限列表失败')
+            this.rightList = res.data
         }
     }
 }

@@ -48,94 +48,94 @@
 
 <script>
 export default {
-    data() {
+    data () {
         return {
-            //列表查询参数
+            // 列表查询参数
             queryInfo: {
                 query: '',
                 pagenum: 1,
                 pagesize: 10
             },
-            //存储获取到的列表数据
+            // 存储获取到的列表数据
             goodsList: [],
-            //分页相关功能数据
+            // 分页相关功能数据
             total: 0,
             currentPage: 1
         }
     },
-    created() {
-        this.queryList();
+    created () {
+        this.queryList()
     },
     methods: {
-        async queryList() {
-            let {
+        async queryList () {
+            const {
                 data: res
             } = await this.$axios.get('/goods', {
                 params: this.queryInfo
-            });
-            if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+            })
+            if (res.meta.status != 200) return this.$message.error(res.meta.msg)
             this.$message({
                 type: 'success',
                 message: res.meta.msg
-            });
-            this.total = res.data.total;
-            this.goodsList = res.data.goods;
+            })
+            this.total = res.data.total
+            this.goodsList = res.data.goods
             this.goodsList.forEach(element => {
-                element.add_time = this.timeFormat(element.add_time);
-                element.upd_time = this.timeFormat(element.upd_time);
-            });
+                element.add_time = this.timeFormat(element.add_time)
+                element.upd_time = this.timeFormat(element.upd_time)
+            })
         },
-        //时间格式化及补0
-        timeFormat(time) {
-            let date = new Date(time);
-            let year = date.getFullYear();
-            let month = this.dateFormat(date.getMonth() + 1);
-            let day = this.dateFormat(date.getDate());
-            let hour = this.dateFormat(date.getHours());
-            let minute = this.dateFormat(date.getMinutes());
-            let second = this.dateFormat(date.getSeconds());
+        // 时间格式化及补0
+        timeFormat (time) {
+            const date = new Date(time)
+            const year = date.getFullYear()
+            const month = this.dateFormat(date.getMonth() + 1)
+            const day = this.dateFormat(date.getDate())
+            const hour = this.dateFormat(date.getHours())
+            const minute = this.dateFormat(date.getMinutes())
+            const second = this.dateFormat(date.getSeconds())
             return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
         },
-        dateFormat(num) {
-            return num < 10 ? '0' + num : '' + num;
+        dateFormat (num) {
+            return num < 10 ? '0' + num : '' + num
         },
-        //分页操作
-        handleCurrentChange(newPage) {
-            this.queryInfo.pagenum = newPage;
-            this.queryList();
+        // 分页操作
+        handleCurrentChange (newPage) {
+            this.queryInfo.pagenum = newPage
+            this.queryList()
         },
-        handleSizeChange(newSize) {
-            this.queryInfo.pagesize = newSize;
-            this.queryList();
+        handleSizeChange (newSize) {
+            this.queryInfo.pagesize = newSize
+            this.queryList()
         },
-        //发生跳转
-        goAdd() {
-            this.$router.push('/goods/add');
+        // 发生跳转
+        goAdd () {
+            this.$router.push('/goods/add')
         },
-        //删除商品
-        delGoods(row) {
+        // 删除商品
+        delGoods (row) {
             {
-                console.log(row);
+                console.log(row)
                 this.$messagebox.confirm('确认删除该商品？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                    let {
+                    const {
                         data: res
                     } = await this.$axios.delete(`goods/${row.goods_id}`)
-                    if (res.meta.status != 200) return this.$message.error(res.meta.msg);
+                    if (res.meta.status != 200) return this.$message.error(res.meta.msg)
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
-                    });
-                    this.queryList();
+                    })
+                    this.queryList()
                 }).catch(() => {
                     this.$message({
                         type: 'info',
                         message: '已取消删除'
-                    });
-                });
+                    })
+                })
             }
         }
     }
