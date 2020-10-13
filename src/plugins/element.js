@@ -40,7 +40,9 @@ import {
   Checkbox,
   Upload,
   Image,
-  Notification
+  Notification,
+  Timeline,
+  TimelineItem
 } from 'element-ui'
 
 //注册按钮组件
@@ -110,3 +112,6 @@ Vue.use(Upload)
 Vue.use(Image)
 //通知
 Vue.prototype.$notify = Notification
+//时间线
+Vue.use(Timeline)
+Vue.use(TimelineItem)
